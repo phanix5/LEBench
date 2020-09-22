@@ -57,7 +57,7 @@ char *new_output_fn = NULL;
 #define OUTPUT_FN		OUTPUT_FILE_PATH "output_file.csv"
 #define NEW_OUTPUT_FN	OUTPUT_FILE_PATH "new_output_file.csv"
 #define DEBUG false
-#define BASE_ITER 10000
+#define BASE_ITER 100 
 
 #define PAGE_SIZE 4096
 
@@ -889,7 +889,7 @@ void context_switch_test(struct timespec *diffTime) {
 
 int msg_size = -1;
 int curr_iter_limit = -1;
-#define sock "/TEST_DIR/socket"
+#define sock "/users/phanix/LEBench/TEST_DIR/socket" 
 void send_test(struct timespec *timeArray, int iter, int *i) {
 	int retval;
 	int fds1[2], fds2[2];
@@ -904,6 +904,7 @@ void send_test(struct timespec *timeArray, int iter, int *i) {
 	server_addr.sun_family = AF_UNIX;
 	strncpy(server_addr.sun_path, home, sizeof(server_addr.sun_path) - 1); 
 	strncpy(server_addr.sun_path, sock, sizeof(server_addr.sun_path) - 1); 
+	unlink(sock);
 
 	int forkId = fork();
 
@@ -917,7 +918,7 @@ void send_test(struct timespec *timeArray, int iter, int *i) {
 		close(fds2[1]);
 
 		struct sockaddr_un client_addr;
-		socklen_t client_addr_len;
+		socklen_t client_addr_len = sizeof(struct sockaddr_un);
 	
 		int fd_server = socket(AF_UNIX, SOCK_STREAM, 0);
 		if (fd_server < 0) printf("[error] failed to open server socket.\n");
@@ -1003,7 +1004,7 @@ void recv_test(struct timespec *timeArray, int iter, int *i) {
 	struct sockaddr_un server_addr;
 	memset(&server_addr, 0, sizeof(struct sockaddr_un));
 	server_addr.sun_family = AF_UNIX;
-	strncpy(server_addr.sun_path, sock, sizeof(server_addr.sun_path) - 1); 
+	strncpy(server_addr.sun_path,sock , sizeof(server_addr.sun_path) - 1); 
 
 	int forkId = fork();
 
@@ -1017,7 +1018,7 @@ void recv_test(struct timespec *timeArray, int iter, int *i) {
 		close(fds2[1]);
 
 		struct sockaddr_un client_addr;
-		socklen_t client_addr_len;
+		socklen_t client_addr_len = sizeof(struct sockaddr_un);
 	
 		int fd_server = socket(AF_UNIX, SOCK_STREAM, 0);
 		if (fd_server < 0) printf("[error] failed to open server socket.\n");
